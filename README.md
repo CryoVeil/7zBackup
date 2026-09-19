@@ -90,4 +90,8 @@ No SDK needed to build: `build.bat` compiles with the .NET Framework `csc.exe` t
 
 ## License
 
-[MIT](LICENSE)
+[PolyForm Noncommercial License 1.0.0](LICENSE) — free for personal, educational, research, and other noncommercial use; commercial use requires a separate license.
+
+个人使用、学习、研究、转发都可以；商业使用（含售卖、搭进商业产品）需另行授权。
+
+Required Notice: Copyright (c) 2026 CryoVeil (https://github.com/CryoVeil)
