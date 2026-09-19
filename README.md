@@ -1,5 +1,7 @@
 # 7zBackup — 7z 加密备份小工具
 
+**by [CryoVeil](https://github.com/CryoVeil)** 🎏
+
 > Drag-and-drop encrypted backup for Windows: AES-256 + encrypted file names, builds with nothing but the compiler Windows already ships.
 >
 > 把文件/文件夹拖进窗口，输入密码，回车 —— 得到一个高强度加密的 `.7z`，适合上传网盘做备份。
