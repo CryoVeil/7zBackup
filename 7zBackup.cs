@@ -8,6 +8,9 @@
 //        无需安装任何开发环境)。生成单文件 7zBackup.exe。
 //
 //  自检: 7zBackup.exe --selftest  (无界面,结果写入 selftest_result.txt)
+//
+//  作者: CryoVeil  https://github.com/CryoVeil
+//  版本: v1.1.0  (标题栏 / 窗口底部署名 / 自检报告都读 AppInfo 这一份,避免各处写不一致)
 // ============================================================================
 
 using System;
@@ -44,6 +47,17 @@ namespace SevenZipBackup
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
+    }
+
+    // ------------------------------------------------------------------ 应用信息
+    // 作者与版本只在这里定义一次,标题栏、窗口底部署名、自检报告都引用它。
+    internal static class AppInfo
+    {
+        public const string Author = "CryoVeil";
+        public const string AuthorUrl = "https://github.com/CryoVeil";
+        public const string Version = "v1.1.0";
+        public const string TitleByline = "by " + Author + " " + Version;
+        public const string Byline = "by " + Author + "  ·  " + Version;
     }
 
     // ------------------------------------------------------------------ 设置
@@ -680,6 +694,7 @@ namespace SevenZipBackup
         {
             var log = new StringBuilder();
             log.AppendLine("7z加密备份 自检报告  " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            log.AppendLine("版本: " + AppInfo.Version + "   作者: " + AppInfo.Author + "   " + AppInfo.AuthorUrl);
             log.AppendLine("7z 路径: " + (SevenZipLocator.Find() ?? "(未找到)"));
             string baseDir = Path.Combine(Path.GetTempPath(),
                 "7zBackupSelfTest_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"));
@@ -923,7 +938,7 @@ namespace SevenZipBackup
 
         private string _7zPath;
         private Panel _dropPanel;
-        private Label _dropLabel, _lblItems, _lblStatus, _lblAdmin, _lblOut;
+        private Label _dropLabel, _lblItems, _lblStatus, _lblAdmin, _lblAuthor, _lblOut;
         private ListBox _list;
         private TextBox _txtPwd, _txtOut;
         private CheckBox _chkShow, _chkTest, _chkSplit, _chkManifest, _chkJunk;
@@ -976,7 +991,7 @@ namespace SevenZipBackup
 
         private void BuildUi()
         {
-            Text = "7z 加密备份(AES-256 + 文件名加密)";
+            Text = "7z 加密备份(AES-256 + 文件名加密)  —  " + AppInfo.TitleByline;
             Font = new Font("Microsoft YaHei UI", 9F);
             ClientSize = new Size(656, 582);
             MinimumSize = new Size(620, 544);
@@ -1223,9 +1238,19 @@ namespace SevenZipBackup
 
             _lblAdmin = new Label();
             _lblAdmin.Location = new Point(12, 538);
-            _lblAdmin.Size = new Size(632, 34);
+            _lblAdmin.Size = new Size(470, 36);
             _lblAdmin.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Controls.Add(_lblAdmin);
+
+            // 作者署名:放在底部右角,与上面的提示同一行,灰字不抢眼但一眼能看到出处
+            _lblAuthor = new Label();
+            _lblAuthor.Location = new Point(490, 540);
+            _lblAuthor.Size = new Size(154, 20);
+            _lblAuthor.TextAlign = ContentAlignment.MiddleRight;
+            _lblAuthor.ForeColor = Color.FromArgb(120, 130, 145);
+            _lblAuthor.Text = AppInfo.Byline;
+            _lblAuthor.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            Controls.Add(_lblAuthor);
 
             EnableDrop(this);
             ScaleForDpi();

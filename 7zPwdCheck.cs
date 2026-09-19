@@ -8,6 +8,9 @@
 //
 //  编译: 双击 build_pwdcheck.bat(用 Windows 自带编译器,无需装任何东西)
 //  自检: 7zPwdCheck.exe --selftest   结果写入 7zPwdCheck_result.txt
+//
+//  作者: CryoVeil  https://github.com/CryoVeil
+//  版本: v1.1.0  (与 7zBackup.exe 同版本号;标题栏 / 窗口署名 / 自检报告都读 AppInfo)
 // ============================================================================
 
 using System;
@@ -43,6 +46,17 @@ namespace SevenZipPwdCheck
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
+    }
+
+    // ------------------------------------------------------------------ 应用信息
+    // 作者与版本只在这里定义一次,标题栏、窗口署名、自检报告都引用它。
+    internal static class AppInfo
+    {
+        public const string Author = "CryoVeil";
+        public const string AuthorUrl = "https://github.com/CryoVeil";
+        public const string Version = "v1.1.0";
+        public const string TitleByline = "by " + Author + " " + Version;
+        public const string Byline = "by " + Author + "  ·  " + Version;
     }
 
     // -------------------------------------------------------------- 7z 定位
@@ -276,6 +290,7 @@ namespace SevenZipPwdCheck
         {
             var log = new StringBuilder();
             log.AppendLine("7z密码验证器 自检报告  " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            log.AppendLine("版本: " + AppInfo.Version + "   作者: " + AppInfo.Author + "   " + AppInfo.AuthorUrl);
             string z = SevenZipLocator.Find();
             log.AppendLine("7z 路径: " + (z ?? "(未找到)"));
             string baseDir = Path.Combine(Path.GetTempPath(),
@@ -357,7 +372,7 @@ namespace SevenZipPwdCheck
     {
         private string _7zPath;
         private Panel _dropPanel;
-        private Label _dropLabel, _lblStatus;
+        private Label _dropLabel, _lblStatus, _lblAuthor;
         private ListView _list;
         private TextBox _txtPwd;
         private CheckBox _chkShow, _chkDeep;
@@ -383,7 +398,7 @@ namespace SevenZipPwdCheck
 
         private void BuildUi()
         {
-            Text = "7z 密码验证 —— 批量检查压缩包密码";
+            Text = "7z 密码验证 —— 批量检查压缩包密码  —  " + AppInfo.TitleByline;
             Font = new Font("Microsoft YaHei UI", 9F);
             ClientSize = new Size(640, 470);
             MinimumSize = new Size(600, 440);
@@ -409,6 +424,16 @@ namespace SevenZipPwdCheck
 
             _btnClear = MkBtn("清空列表", 12, 98, 96);
             _btnClear.Click += delegate { ClearAll(); };
+
+            // 作者署名:放在"清空列表"同一行的右端,灰字不抢眼但一眼能看到出处
+            _lblAuthor = new Label();
+            _lblAuthor.Location = new Point(460, 101);
+            _lblAuthor.Size = new Size(168, 20);
+            _lblAuthor.TextAlign = ContentAlignment.MiddleRight;
+            _lblAuthor.ForeColor = Color.FromArgb(120, 130, 145);
+            _lblAuthor.Text = AppInfo.Byline;
+            _lblAuthor.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Controls.Add(_lblAuthor);
 
             _list = new ListView();
             _list.Location = new Point(12, 130);
